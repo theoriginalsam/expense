@@ -1,86 +1,98 @@
-import { View, StyleSheet } from 'react-native';
-import { Text, List, Switch, Divider } from 'react-native-paper';
-import { useState, useEffect } from 'react';
-import { requestNotificationPermissions } from '../../src/services/notifications';
+import React from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Text, List, Divider, useTheme } from 'react-native-paper';
+import { ExportData } from '../../src/components/settings/ExportData';
 
 export default function SettingsScreen() {
-  const [expenseNotifications, setExpenseNotifications] = useState(true);
-  const [budgetNotifications, setBudgetNotifications] = useState(true);
-  const [reminderNotifications, setReminderNotifications] = useState(true);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-
-  useEffect(() => {
-    checkNotificationPermissions();
-  }, []);
-
-  const checkNotificationPermissions = async () => {
-    const hasPermission = await requestNotificationPermissions();
-    setNotificationsEnabled(hasPermission);
-  };
+  const theme = useTheme();
 
   return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium" style={styles.title}>Settings</Text>
-      
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Settings</Text>
+
+      {/* Account Settings */}
       <List.Section>
-        <List.Subheader>Notifications</List.Subheader>
+        <List.Subheader>Account</List.Subheader>
         <List.Item
-          title="Enable Notifications"
-          description="Allow the app to send you notifications"
-          right={() => (
-            <Switch
-              value={notificationsEnabled}
-              onValueChange={checkNotificationPermissions}
-            />
-          )}
+          title="Profile"
+          left={props => <List.Icon {...props} icon="account" />}
+          onPress={() => {}}
         />
-        <Divider />
         <List.Item
-          title="Expense Notifications"
-          description="Get notified when you add new expenses"
-          right={() => (
-            <Switch
-              value={expenseNotifications}
-              onValueChange={setExpenseNotifications}
-              disabled={!notificationsEnabled}
-            />
-          )}
-        />
-        <Divider />
-        <List.Item
-          title="Budget Alerts"
-          description="Get notified when you're close to your budget limit"
-          right={() => (
-            <Switch
-              value={budgetNotifications}
-              onValueChange={setBudgetNotifications}
-              disabled={!notificationsEnabled}
-            />
-          )}
-        />
-        <Divider />
-        <List.Item
-          title="Reminder Notifications"
-          description="Get reminded to log your expenses"
-          right={() => (
-            <Switch
-              value={reminderNotifications}
-              onValueChange={setReminderNotifications}
-              disabled={!notificationsEnabled}
-            />
-          )}
+          title="Notifications"
+          left={props => <List.Icon {...props} icon="bell" />}
+          onPress={() => {}}
         />
       </List.Section>
-    </View>
+
+      <Divider />
+
+      {/* App Settings */}
+      <List.Section>
+        <List.Subheader>App Settings</List.Subheader>
+        <List.Item
+          title="Theme"
+          left={props => <List.Icon {...props} icon="palette" />}
+          onPress={() => {}}
+        />
+        <List.Item
+          title="Currency"
+          left={props => <List.Icon {...props} icon="currency-usd" />}
+          onPress={() => {}}
+        />
+      </List.Section>
+
+      <Divider />
+
+      {/* Data Management */}
+      <List.Section>
+        <List.Subheader>Data Management</List.Subheader>
+        <View style={styles.exportContainer}>
+          <ExportData />
+        </View>
+        <List.Item
+          title="Backup"
+          left={props => <List.Icon {...props} icon="backup" />}
+          onPress={() => {}}
+        />
+      </List.Section>
+
+      <Divider />
+
+      {/* About */}
+      <List.Section>
+        <List.Subheader>About</List.Subheader>
+        <List.Item
+          title="Version"
+          description="1.0.0"
+          left={props => <List.Icon {...props} icon="information" />}
+        />
+        <List.Item
+          title="Privacy Policy"
+          left={props => <List.Icon {...props} icon="shield-account" />}
+          onPress={() => {}}
+        />
+        <List.Item
+          title="Terms of Service"
+          left={props => <List.Icon {...props} icon="file-document" />}
+          onPress={() => {}}
+        />
+      </List.Section>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: '#fff',
   },
   title: {
-    marginBottom: 20,
+    fontSize: 24,
+    fontWeight: 'bold',
+    padding: 16,
+  },
+  exportContainer: {
+    paddingHorizontal: 16,
   },
 }); 
